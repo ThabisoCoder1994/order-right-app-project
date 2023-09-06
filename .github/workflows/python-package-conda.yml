@@ -1,4 +1,6 @@
 name: Python Package using Conda
+  python3 -m pip install --upgrade pip
+        python3 -m pip install --upgrade Pillow
 
 on: [push]
 
