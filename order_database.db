@@ -1,0 +1,60 @@
+import tkinter as tk
+from tkinter import ttk
+# ... (other imports)
+
+import sqlite3  # Import the SQLite library
+
+# Create a connection to the database (or create if not exists)
+conn = sqlite3.connect('order_database.db')
+cursor = conn.cursor()
+
+# Create a table to store order information
+cursor.execute('''
+    CREATE TABLE IF NOT EXISTS orders (
+        id INTEGER PRIMARY KEY,
+        order_id TEXT,
+        order_items TEXT,
+        total_amount INTEGER
+    )
+''')
+conn.commit()
+
+# ... (your existing code)
+
+# ------------------------------------FUNCTIONS--------------------------------------------- #
+
+def order():
+    new_receipt = orderIDLabel.cget("text")
+    new_receipt = new_receipt.replace("ORDER ID : ", "")
+    transaction_list = orderTransaction.cget("text").split("R ")
+    transaction_list.pop(len(transaction_list) - 1)
+
+    order_total = 0
+    order_items = ""
+    for item in transaction_list:
+        order_items += item + "R "
+        order_total += prices[item.replace("....", "")]
+
+    with conn:
+        cursor.execute("INSERT INTO orders (order_id, order_items, total_amount) VALUES (?, ?, ?)",
+                       (new_receipt, order_items, order_total))
+
+    orderTotalLabel.configure(text="TOTAL : R0")
+    orderIDLabel.configure(text="ODER ID: " + ORDER_ID())
+    orderTransaction.configure(text="")
+
+# ... (rest of your functions)
+
+# ---------------------------------- STYLING AND IMAGES ------------------------------------ #
+
+# ... (your existing styles and images)
+
+#----------------------------------- WIDGETS ----------------------------------------------- #
+
+# ... (your existing frames, labels, and buttons)
+
+# ----------------------------- GRID CONFIGURATIONS -------------------------------------------#
+
+# ... (your existing grid configurations)
+
+root.mainloop()
